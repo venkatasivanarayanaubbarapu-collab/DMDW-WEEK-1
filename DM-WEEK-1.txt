@@ -1,0 +1,49 @@
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import weka.core.Instances;
+import weka.core.AttributeStats;
+
+public class WekaDataMining {
+    public static void main(String[] args) throws Exception {
+
+        // Load the ARFF dataset
+        BufferedReader reader = new BufferedReader(
+            new FileReader("iris.arff")
+        );
+
+        Instances data = new Instances(reader);
+        reader.close();
+
+        // Set the last attribute as class
+        data.setClassIndex(data.numAttributes() - 1);
+
+        // Display dataset information
+        System.out.println("Dataset: " + data.relationName());
+        System.out.println("Number of Instances: " + data.numInstances());
+        System.out.println("Number of Attributes: " + data.numAttributes());
+        System.out.println("Class Attribute: " + data.classAttribute().name());
+
+        // Display attribute names and types
+        System.out.println("\nAttributes:");
+        for (int i = 0; i < data.numAttributes(); i++) {
+            System.out.println(
+                data.attribute(i).name() + " - " +
+                data.attribute(i).typeToString()
+            );
+        }
+
+        // Display class distribution
+        System.out.println("\nClass Distribution:");
+        AttributeStats stats = data.attributeStats(data.classIndex());
+
+        if (stats.nominalCounts != null) {
+            for (int i = 0; i < stats.nominalCounts.length; i++) {
+                System.out.println(
+                    data.classAttribute().value(i) + " = " +
+                    stats.nominalCounts[i]
+                );
+            }
+        }
+    }
+}
